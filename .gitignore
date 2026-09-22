@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.venv/
+venv/
+
+# Jupyter
+.ipynb_checkpoints/
+*.nbconvert.ipynb
+
+# Streamlit
+.streamlit/secrets.toml
+
+# macOS
+.DS_Store
+
+# Simulation output. These are big and rebuildable — run src/simulate.py.
+results/sims/*.npy
+results/sims/*.npz
+results/sims/*.parquet
+
+# The source database under data/raw/ IS committed. Anything else that ends up
+# as .db is something a script built, so keep it out.
+data/model/*.db
