@@ -10,9 +10,12 @@ Assembly elections of 2021 and 2026. The pipeline there reads the Commission's
 published workbooks, cleans them, and asserts its own output against the totals
 in the Commission's Highlight report before writing this file.
 
-**That repository has no LICENSE file.** The data originates with the Election
-Commission either way, but until a licence is added there, the reuse terms for
-this copy are unstated. Sort that out before making this repo public.
+On licensing: that repository of mine carries no LICENSE file, so it states no
+terms of its own. The data originates with the Election Commission of India and
+their terms are what govern reuse of the numbers themselves. The code in this
+repo is MIT, and that covers the code only. Adding a licence to the original
+repo is still worth doing, since a public repo with no stated terms is an
+awkward thing to point people at.
 
 Copied in on 22 September 2026. Treat it as read-only: nothing in `src/`
 should ever write to it. Generated tables go to `data/model/`.
