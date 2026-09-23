@@ -150,6 +150,39 @@ def fig_swing_curve(seats):
     plt.close(fig)
 
 
+def fig_seat_distribution(seats):
+    """The simulated seat distribution against what actually happened."""
+    from src.simulate import run, summarise
+
+    counts = run(seats)
+    actual = int(target(seats).sum())
+    got = summarise(counts, actual=actual)
+
+    fig, ax = plt.subplots(figsize=(8, 4.5))
+    ax.hist(
+        counts,
+        bins=range(int(counts.min()), int(counts.max()) + 2),
+        color=BJP_ORANGE,
+        alpha=0.85,
+        edgecolor="none",
+    )
+    ax.axvline(actual, color=INK, linestyle="--", linewidth=1.6)
+    ax.axvline(147, color=GREY, linestyle=":", linewidth=1.2)
+    ax.text(actual + 2, ax.get_ylim()[1] * 0.9, f"actual {actual}", fontsize=9, color=INK)
+    ax.text(149, ax.get_ylim()[1] * 0.55, "majority 147", fontsize=9, color=GREY)
+    _style(
+        ax,
+        f"10,000 simulated elections\n"
+        f"90% of draws between {got['p05']:.0f} and {got['p95']:.0f} seats; "
+        f"the actual result sits at the {got['actual_percentile']:.0f}th percentile",
+        "BJP seats out of 293",
+        "draws",
+    )
+    fig.tight_layout()
+    fig.savefig(FIG_DIR / "05_seat_distribution.png", dpi=150)
+    plt.close(fig)
+
+
 def build_all():
     FIG_DIR.mkdir(parents=True, exist_ok=True)
     seats = load_seat_features()
@@ -157,6 +190,7 @@ def build_all():
     fig_miss_by_tipping_distance(seats)
     fig_model_comparison(seats)
     fig_swing_curve(seats)
+    fig_seat_distribution(seats)
     return sorted(p.name for p in FIG_DIR.glob("*.png"))
 
 
