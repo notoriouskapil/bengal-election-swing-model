@@ -95,6 +95,13 @@ def build_seat_features():
             con,
         )
         shares = _shares(con)
+        # The actual winning candidate's share. Needed because the bloc columns
+        # sum several parties, and a bloc sum is not a candidate: in Darjeeling
+        # the `OTHER` bloc reaches 57% while BJP won the seat on 41.5%.
+        top = pd.read_sql_query(
+            "select year, ac_no, vote_pct as winner_pct from results where position = 1",
+            con,
+        )
 
     # Seats that polled in both years. Falta drops out here, not by ac_no.
     polled = status[status["result_status"] == "polled"]
@@ -103,7 +110,7 @@ def build_seat_features():
     )
     seats = seats[seats["ac_no"].isin(both)].copy()
 
-    year_cols = wins.merge(shares, on=["year", "ac_no"])
+    year_cols = wins.merge(shares, on=["year", "ac_no"]).merge(top, on=["year", "ac_no"])
     out = seats
     for year in (2021, 2026):
         block = year_cols[year_cols["year"] == year].drop(columns="year")
@@ -120,6 +127,11 @@ def build_seat_features():
         out["total_electors_2026"] / out["total_electors_2021"] - 1.0
     )
     out["turnout_change"] = out["turnout_pct_2026"] - out["turnout_pct_2021"]
+    # Where a third party held the seat in 2021, this is the share a swung TMC
+    # or BJP has to beat to take it. Zero everywhere else.
+    third = ~out["winner_party_2021"].isin(["TMC", "BJP"])
+    out["third_party_hold_2021"] = 0.0
+    out.loc[third, "third_party_hold_2021"] = out.loc[third, "winner_pct_2021"]
 
     out = out.sort_values("ac_no").reset_index(drop=True)
     MODEL_DIR.mkdir(parents=True, exist_ok=True)

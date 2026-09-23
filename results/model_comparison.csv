@@ -1,0 +1,7 @@
+model,features,bjp_seats_predicted,bjp_seats_actual,seat_error,seats_correct,accuracy
+always BJP,none,293,207,86,207,0.7064846416382252
+gradient boosting (post),post,216,207,9,244,0.8327645051194539
+uniform swing (7.60 pts),none,198,207,-9,246,0.8395904436860068
+gradient boosting (pre),pre,219,207,12,249,0.8498293515358362
+logistic (post),post,220,207,13,252,0.8600682593856656
+logistic (pre),pre,217,207,10,255,0.8703071672354948
